@@ -1,13 +1,778 @@
-/* Стили страницы.
-   Скопируйте с предудущей практики. */
+/* ==========================================================================
+   MAN CAVE BARBERSHOP — Стили страницы «Выбор даты и времени»
+   ========================================================================== */
 
-* {
+/* 1. Переменные темы и дизайн-токены (Королевский кобальт #2563EB и ночной слейт #0F172A) */
+:root {
+  --color-primary: #2563EB;          /* Фирменный королевский кобальт */
+  --color-primary-hover: #1D4ED8;    /* Насыщенный синий для hover */
+  --color-primary-light: #DBEAFE;    /* Нежно-голубой оттенок для подсветки */
+  --color-primary-subtle: #EFF6FF;
+
+  --color-dark: #0F172A;             /* Глубокий Midnight Slate для шапки и подвала */
+  --color-dark-surface: #1E293B;     /* Разделители и вторичные темные поверхности */
+  --color-dark-muted: #64748B;
+
+  --color-bg-page: #F8FAFC;          /* Светлый премиальный фон рабочей зоны */
+  --color-card-bg: #FFFFFF;          /* Белый фон карточек */
+  --color-border: #E2E8F0;           /* Холодная граница карточек */
+  --color-border-focus: #3B82F6;
+
+  --color-text-main: #0F172A;        /* Основной цвет текста */
+  --color-text-secondary: #475569;   /* Вторичный цвет текста */
+  --color-text-muted: #94A3B8;       /* Приглушенный текст */
+
+  --font-family-base: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(37, 99, 235, 0.12), 0 4px 6px -4px rgba(37, 99, 235, 0.06);
+
+  --transition-fast: 0.18s ease-in-out;
+  --max-width-container: 1024px;
+}
+
+/* 2. Сброс базовых стилей (CSS Reset) */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 body {
+  font-family: var(--font-family-base);
+  color: var(--color-text-main);
+  background-color: var(--color-bg-page);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* 3. Ограничивающий контейнер */
+.container {
+  width: 100%;
+  max-width: var(--max-width-container);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* 4. Кнопки общего назначения */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn--primary {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+}
+
+.btn--primary:hover {
+  background-color: var(--color-primary-hover);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28);
+}
+
+.btn--primary:active {
+  transform: translateY(1px);
+}
+
+/* 5. Шапка сайта (Header) */
+.header {
+  background-color: var(--color-dark);
+  color: #FFFFFF;
+  border-bottom: 1px solid var(--color-dark-surface);
+}
+
+.header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  transition: color var(--transition-fast);
+}
+
+.logo:hover {
+  color: #60A5FA;
+}
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav__item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav__link {
+  font-size: 14px;
+  font-weight: 500;
+  color: #CBD5E1;
+  transition: color var(--transition-fast);
+  padding: 8px 0;
+}
+
+.nav__link:hover {
+  color: #FFFFFF;
+}
+
+.header__btn {
+  padding: 10px 22px;
+}
+
+/* 6. Индикатор шагов бронирования (Steps Bar) */
+.booking-steps {
+  background-color: var(--color-card-bg);
+  border-bottom: 1px solid var(--color-border);
+  padding: 18px 0;
+}
+
+.steps-list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.step-item__title {
+  font-size: 14px;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.step-item__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #F1F5F9;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+/* Пройденные шаги (Мастер, Услуга) */
+.step-item--completed {
+  color: var(--color-text-main);
+}
+
+.step-item--completed .step-item__badge {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+}
+
+/* Текущий активный шаг (Дата и время) */
+.step-item--active {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.step-item--active .step-item__badge {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  box-shadow: 0 0 0 4px var(--color-primary-light);
+}
+
+/* Разделительные полосы между шагами */
+.step-divider {
+  flex-grow: 1;
+  height: 2px;
+  background-color: var(--color-border);
+  margin: 0 16px;
+  border-radius: 1px;
+}
+
+.step-divider--completed {
+  background-color: var(--color-primary);
+}
+
+/* 7. Основная область страницы (Main) */
+.main-content {
+  flex-grow: 1;
+  padding: 36px 0 48px;
+}
+
+/* 8. Заголовок страницы и кнопка Назад */
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin-bottom: 12px;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  cursor: pointer;
+}
+
+.back-link:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-hover);
+}
+
+.back-link__icon {
+  font-size: 16px;
+}
+
+.page-header__title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-text-main);
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+
+.page-header__subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+/* 9. Сетка бронирования (Две колонки: Календарь + Время) */
+.booking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* 10. Левая карточка: Календарь */
+.calendar-card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.calendar-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.calendar-card__month {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.calendar-card__nav {
+  display: flex;
+  gap: 8px;
+}
+
+.calendar-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  background-color: #F1F5F9;
+  color: var(--color-text-main);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.calendar-nav-btn:hover {
+  background-color: #E2E8F0;
+  color: var(--color-primary);
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.calendar-weekday {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+/* Сетка чисел месяца */
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.day-cell {
+  aspect-ratio: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-main);
+  background-color: transparent;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+/* Ховер на доступные дни */
+.day-cell:hover:not(.day-cell--selected):not(.selected):not(.disabled):not(.other-month) {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary-hover);
+}
+
+/* Дни из соседних месяцев */
+.day-cell.other-month,
+.day-cell--other-month {
+  color: #94A3B8;
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Дни раньше «сегодня» (недоступные) */
+.day-cell.disabled,
+.day-cell--disabled {
+  color: #94A3B8;
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Текущий день (сегодня) — деликатная точка-индикатор */
+.day-cell.today,
+.day-cell--today {
+  position: relative;
+  font-weight: 600;
+}
+
+.day-cell.today::after,
+.day-cell--today::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+}
+
+.day-cell--selected.day-cell--today::after,
+.day-cell.selected.day-cell--today::after,
+.day-cell--selected.today::after,
+.day-cell.selected.today::after {
+  background-color: #FFFFFF;
+}
+
+/* Выбранный день (24 октября в макете MAN CAVE) */
+.day-cell--selected,
+.day-cell.selected {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+}
+
+.day-cell--selected:hover,
+.day-cell.selected:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* 11. Правая карточка: Доступное время */
+.time-card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.time-card__top {
+  margin-bottom: 20px;
+}
+
+.time-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+/* Сетка слотов времени (2 колонки) */
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.time-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 48px;
+  padding: 0 16px;
+  background-color: #F8FAFC;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-main);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.time-slot__time {
+  font-size: 15px;
+  font-weight: inherit;
+  color: inherit;
+}
+
+/* Ховер на свободные слоты */
+.time-slot:hover:not(:disabled):not(.time-slot--selected):not(.selected) {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Выбранный слот времени (16:30 ✓) */
+.time-slot--selected,
+.time-slot.selected {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.time-slot--selected:hover,
+.time-slot.selected:hover {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+.time-slot__icon {
+  font-size: 14px;
+}
+
+/* Занятые слоты (12:30, 15:00) */
+.time-slot--disabled,
+.time-slot.unavailable,
+.time-slot:disabled {
+  background-color: #F1F5F9;
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.time-slot__label {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-left: 4px;
+}
+
+/* Пустое состояние слотов времени (когда нет свободных записей) */
+.time-slots-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--color-text-muted);
+  font-size: 15px;
+  background-color: #F8FAFC;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-border);
+}
+
+/* 12. Нижняя плашка со сводкой и кнопкой продолжения */
+.summary-bar {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.summary-bar__info {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.summary-bar__label {
+  color: var(--color-text-secondary);
+}
+
+.summary-bar__value {
+  color: var(--color-text-main);
+  font-weight: 700;
+}
+
+.summary-bar__btn {
+  padding: 12px 28px;
+  font-size: 15px;
+}
+
+.btn__icon {
+  font-size: 16px;
+  transition: transform var(--transition-fast);
+}
+
+.summary-bar__btn:hover .btn__icon {
+  transform: translateX(3px);
+}
+
+/* 13. Подвал сайта (Footer) */
+.footer {
+  background-color: var(--color-dark);
+  color: #94A3B8;
+  padding-top: 48px;
+  padding-bottom: 24px;
+  margin-top: auto;
+}
+
+.footer__container {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer__main {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1.5fr;
+  gap: 40px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--color-dark-surface);
+}
+
+.footer__col--brand {
+  padding-right: 20px;
+}
+
+.footer__logo {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+.footer__desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #94A3B8;
+  max-width: 320px;
+}
+
+.footer__title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.footer__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer__list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #CBD5E1;
+}
+
+.footer__icon-svg {
+  flex-shrink: 0;
+  stroke: var(--color-primary);
+}
+
+.footer__link {
+  color: #CBD5E1;
+  transition: color var(--transition-fast);
+}
+
+.footer__link:hover {
+  color: #FFFFFF;
+}
+
+.footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 24px;
+  font-size: 13px;
+  color: var(--color-dark-muted);
+}
+
+.footer__copyright {
+  color: var(--color-dark-muted);
+}
+
+.footer__privacy {
+  color: #94A3B8;
+  transition: color var(--transition-fast);
+}
+
+.footer__privacy:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+/* 14. Адаптивность для небольших экранов (Responsive) */
+@media (max-width: 860px) {
+  .booking-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__main {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footer__col--brand {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .header__container {
+    height: auto;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .nav__list {
+    gap: 16px;
+  }
+
+  .steps-list {
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  .step-divider {
+    margin: 0 8px;
+  }
+
+  .summary-bar {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .summary-bar__info {
+    justify-content: center;
+  }
+
+  .footer__main {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .footer__col--brand {
+    grid-column: span 1;
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
 }
